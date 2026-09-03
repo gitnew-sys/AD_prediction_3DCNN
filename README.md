@@ -32,19 +32,5 @@ python 3s_cnn.py                           <- the whole pipeline: data loading, 
 
 ## pMCI vs. sMCI labeling
 
-The imaging data alone doesn't indicate whether an MCI subject converted to AD. That requires cross-referencing each subject's RID/PTID against ADNI's Diagnostic Summary table (DXSUM_PDXCONV_ADNIALL.csv, downloaded separately from LONI IDA under Download > Study Data > Assessments > Diagnosis), checking whether DIAGNOSIS changed to 3 (AD) within a 36-month follow-up window of the baseline MCI diagnosis (DIAGNOSIS == 2). Subjects that convert are pMCI; subjects that remain MCI/stable through 36 months are sMCI. This classification is done once, upstream, to sort scans into the data\pMCI / data\sMCI folders before running run_adni.py.
+The imaging data alone doesn't indicate whether an MCI subject converted to AD. That requires cross-referencing each subject's RID/PTID against ADNI's Diagnostic Summary table (DXSUM_PDXCONV_ADNIALL.csv, downloaded from LONI IDA), checking whether DIAGNOSIS changed to 3 (AD) within a 36-month follow-up window of the baseline MCI diagnosis (DIAGNOSIS == 2). Subjects that convert are pMCI; subjects that remain MCI/stable through 36 months are sMCI. This classification is done once, upstream, to sort scans into the data\pMCI / data\sMCI folders before running run_adni.py.
 
-## Honest caveats vs. the original paper
-
-- Exact layer padding/stride choices are not fully specified in the text; this
-  implementation uses "same" padding + 2×2×2 pooling, which reproduces the
-  qualitative architecture but not necessarily the exact reported parameter
-  counts (paper: ~1.44M for CAE, ~0.34M for ICAE).
-- Nested 5-fold cross-validation (repeated 20×) and hyperparameter grid search
-  over L1/L2 weighting (Fig. 5/8 in the paper) are described but not scripted
-  here — `train.py` runs a single train/val split for clarity; wrap it in your
-  own CV loop for a faithful reproduction of the evaluation protocol.
-- DARTEL spatial normalization (SPM12) is external to this codebase.
-- This code has been syntax-checked but **not executed against real MRI data
-  or GPU hardware** in this environment (no network access to install PyTorch
-  here) — please validate on your own machine before relying on results.
